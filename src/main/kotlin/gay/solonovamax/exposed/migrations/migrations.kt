@@ -1,4 +1,4 @@
-package de.neonew.exposed.migrations
+package gay.solonovamax.exposed.migrations
 
 import java.time.Clock
 import java.time.Instant.now

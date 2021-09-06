@@ -1,4 +1,4 @@
-package de.neonew.exposed.migrations.helpers
+package gay.solonovamax.exposed.migrations.helpers
 
 /*
  * Copyright (C) Contributors to the Suwayomi project

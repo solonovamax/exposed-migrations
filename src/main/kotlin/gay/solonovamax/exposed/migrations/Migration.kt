@@ -1,4 +1,4 @@
-package de.neonew.exposed.migrations
+package gay.solonovamax.exposed.migrations
 
 abstract class Migration {
     val name: String

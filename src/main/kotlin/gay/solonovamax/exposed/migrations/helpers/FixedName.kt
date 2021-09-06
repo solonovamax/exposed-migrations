@@ -1,4 +1,4 @@
-package de.neonew.exposed.migrations.helpers
+package gay.solonovamax.exposed.migrations.helpers
 
 /*
  * Copyright (C) Contributors to the Suwayomi project
@@ -7,7 +7,7 @@ package de.neonew.exposed.migrations.helpers
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
-import de.neonew.exposed.migrations.migrationsDatabase
+import gay.solonovamax.exposed.migrations.migrationsDatabase
 
 /**
  * Using plain name without said conversion may cause issues in different Locales or naming styles.

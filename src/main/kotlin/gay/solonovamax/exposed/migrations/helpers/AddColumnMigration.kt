@@ -1,4 +1,4 @@
-package de.neonew.exposed.migrations.helpers
+package gay.solonovamax.exposed.migrations.helpers
 
 /*
  * Copyright (C) Contributors to the Suwayomi project
@@ -7,17 +7,17 @@ package de.neonew.exposed.migrations.helpers
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
-abstract class RenameFieldMigration(
+abstract class AddColumnMigration(
     tableName: String,
-    originalName: String,
-    newName: String,
+    columnName: String,
+    columnType: String,
+    default: String,
 ) : SQLMigration() {
     private val fixedTableName by lazy { tableName.toSqlName() }
-    private val fixedOriginalName by lazy { originalName.toSqlName() }
-    private val fixedNewName by lazy { newName.toSqlName() }
+    private val fixedColumnName by lazy { columnName.toSqlName() }
 
     override val sql by lazy {
-        "ALTER TABLE $fixedTableName " +
-            "ALTER COLUMN $fixedOriginalName RENAME TO $fixedNewName"
+        "ALTER TABLE $fixedTableName" +
+            " ADD COLUMN $fixedColumnName $columnType DEFAULT $default"
     }
 }
