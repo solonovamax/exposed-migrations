@@ -4,7 +4,7 @@ import java.time.Clock
 import java.time.Instant.now
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.sql.Database
-import org.jetbrains.exposed.sql.SchemaUtils.create
+import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.exists
 import org.jetbrains.exposed.sql.transactions.TransactionManager
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -30,31 +30,31 @@ fun runMigrations(
     
     val latestVersion = transaction(database) {
         createTableIfNotExists(database)
-        MigrationEntity.all().maxByOrNull { it.version }?.version?.value
+        MigrationEntity.all().maxByOrNull { it.version }?.version?.value ?: -1
     }
     
     logger.info { "Database version before migrations: $latestVersion" }
     
-    migrations
-        .sortedBy { it.version }
-        .filter { shouldRun(latestVersion, it) }
-        .forEach {
-            logger.info { "Running migration version ${it.version}: ${it.name}" }
-            transaction(database) {
-                it.run()
-                
-                MigrationEntity.new {
-                    version = EntityID(it.version, MigrationsTable)
-                    name = it.name
-                    executedAt = now(clock)
-                }
+    for (migration in migrations.sortedBy { it.version }) {
+        if (!shouldRun(latestVersion, migration))
+            continue
+        
+        logger.info { "Running migration version ${migration.version}: ${migration.name}" }
+        transaction(database) {
+            migration.run()
+            
+            MigrationEntity.new {
+                version = EntityID(migration.version, MigrationsTable)
+                name = migration.name
+                executedAt = now(clock)
             }
         }
+    }
     
     logger.info { "Migrations finished successfully" }
 }
 
-private fun getTopLevelClasses(packageName: String, klass: Class<*>): Set<Class<*>> {
+private fun getTopLevelClasses(packageName: String): Set<Class<*>> {
     val reflections = Reflections(packageName)
     
     return reflections.getSubTypesOf(Migration::class.java)
@@ -71,19 +71,21 @@ private fun createTableIfNotExists(database: Database) {
     if (MigrationsTable.exists()) {
         return
     }
+    
     val tableNames = database.dialect.allTablesNames()
+    
     when (tableNames.isEmpty()) {
         true  -> {
             logger.info { "Empty database found, creating table for migrations" }
-            create(MigrationsTable)
+            SchemaUtils.create(MigrationsTable)
         }
         
         false -> throw IllegalStateException("Tried to run migrations against a non-empty database without a Migrations table. This is not supported.")
     }
 }
 
-private fun shouldRun(latestVersion: Int?, migration: Migration): Boolean {
-    val run = latestVersion?.let { migration.version > it } ?: true
+private fun shouldRun(latestVersion: Int, migration: Migration): Boolean {
+    val run = latestVersion.let { migration.version > it }
     if (!run) {
         logger.debug { "Skipping migration version ${migration.version}: ${migration.name}" }
     }
