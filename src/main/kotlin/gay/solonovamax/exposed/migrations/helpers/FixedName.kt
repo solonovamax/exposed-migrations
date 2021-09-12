@@ -28,14 +28,14 @@
 
 package gay.solonovamax.exposed.migrations.helpers
 
-import gay.solonovamax.exposed.migrations.migrationsDatabase
+import org.jetbrains.exposed.sql.transactions.TransactionManager
 
 /**
  * Using plain name without said conversion may cause issues in different Locales or naming styles.
  * ref: https://garygregory.wordpress.com/2015/11/03/java-lowercase-conversion-turkey/
  */
 internal fun String.toSqlName(): String =
-    migrationsDatabase.identifierManager.let {
+    TransactionManager.current().db.identifierManager.let {
         it.quoteIfNecessary(
             it.inProperCase(this)
                            )

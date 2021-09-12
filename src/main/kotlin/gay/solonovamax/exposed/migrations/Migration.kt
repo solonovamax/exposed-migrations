@@ -28,16 +28,22 @@
 
 package gay.solonovamax.exposed.migrations
 
+import org.jetbrains.exposed.sql.Transaction
+
 abstract class Migration {
     val name: String
     val version: Int
-
+    
     init {
         val groups = Regex("^M(\\d+)_?(.*)$").matchEntire(this::class.simpleName!!)?.groupValues
             ?: throw IllegalArgumentException("Migration class name doesn't match convention")
         version = groups[1].toInt()
         name = groups[2]
     }
-
-    abstract fun run()
+    
+    operator fun invoke(transaction: Transaction) {
+        transaction.run()
+    }
+    
+    abstract fun Transaction.run()
 }

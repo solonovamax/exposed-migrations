@@ -28,15 +28,8 @@
 
 package gay.solonovamax.exposed.migrations.helpers
 
-abstract class DropColumnMigration(
-    tableName: String,
-    columnName: String,
-) : SQLMigration() {
-    private val fixedTableName by lazy { tableName.toSqlName() }
-    private val fixedColumnName by lazy { columnName.toSqlName() }
-
+abstract class DropColumnMigration(private val tableName: String, private val columnName: String) : SQLMigration() {
     override val sql by lazy {
-        "ALTER TABLE $fixedTableName" +
-            " DROP COLUMN $fixedColumnName"
+        "ALTER TABLE ${tableName.toSqlName()} DROP COLUMN ${columnName.toSqlName()}"
     }
 }

@@ -31,12 +31,13 @@ package gay.solonovamax.exposed.migrations.helpers
 import gay.solonovamax.exposed.migrations.Migration
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.Table
+import org.jetbrains.exposed.sql.Transaction
 import org.jetbrains.exposed.sql.transactions.transaction
 
 abstract class AddTableMigration : Migration() {
     abstract val tables: Array<Table>
-
-    override fun run() {
+    
+    override fun Transaction.run() {
         transaction {
             SchemaUtils.create(*tables)
         }

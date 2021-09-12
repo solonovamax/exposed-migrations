@@ -28,13 +28,10 @@
 
 package gay.solonovamax.exposed.migrations.helpers
 
-abstract class RenameFieldMigration(tableName: String, originalName: String, newName: String) : SQLMigration() {
-    private val fixedTableName by lazy { tableName.toSqlName() }
-    private val fixedOriginalName by lazy { originalName.toSqlName() }
-    private val fixedNewName by lazy { newName.toSqlName() }
+abstract class RenameFieldMigration(private val tableName: String, private val originalName: String, private val newName: String) :
+    SQLMigration() {
     
     override val sql by lazy {
-        "ALTER TABLE $fixedTableName " +
-                "ALTER COLUMN $fixedOriginalName RENAME TO $fixedNewName"
+        "ALTER TABLE ${tableName.toSqlName()} ALTER COLUMN ${originalName.toSqlName()} RENAME TO ${newName.toSqlName()}"
     }
 }

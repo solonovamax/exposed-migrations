@@ -29,16 +29,13 @@
 package gay.solonovamax.exposed.migrations.helpers
 
 abstract class AddColumnMigration(
-    tableName: String,
-    columnName: String,
-    columnType: String,
-    default: String,
-) : SQLMigration() {
-    private val fixedTableName by lazy { tableName.toSqlName() }
-    private val fixedColumnName by lazy { columnName.toSqlName() }
-
+    private val tableName: String,
+    private val columnName: String,
+    private val columnType: String,
+    private val default: String,
+                                 ) : SQLMigration() {
+    
     override val sql by lazy {
-        "ALTER TABLE $fixedTableName" +
-            " ADD COLUMN $fixedColumnName $columnType DEFAULT $default"
+        "ALTER TABLE ${tableName.toSqlName()} ADD COLUMN ${columnName.toSqlName()} $columnType DEFAULT $default"
     }
 }

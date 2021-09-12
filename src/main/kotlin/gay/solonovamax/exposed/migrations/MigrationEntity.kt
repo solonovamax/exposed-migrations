@@ -28,7 +28,6 @@
 
 package gay.solonovamax.exposed.migrations
 
-import jdk.jfr.internal.handlers.EventHandler.timestamp
 import org.jetbrains.exposed.dao.IntEntity
 import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.id.EntityID

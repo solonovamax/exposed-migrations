@@ -29,18 +29,16 @@
 package gay.solonovamax.exposed.migrations.helpers
 
 import gay.solonovamax.exposed.migrations.Migration
-import org.jetbrains.exposed.sql.transactions.TransactionManager
+import org.jetbrains.exposed.sql.Transaction
 import org.jetbrains.exposed.sql.vendors.currentDialect
 
 
 abstract class SQLMigration : Migration() {
     abstract val sql: String
     
-    override fun run() {
-        with(TransactionManager.current()) {
-            exec(sql)
-            commit()
-            currentDialect.resetCaches()
-        }
+    override fun Transaction.run() {
+        exec(sql)
+        commit()
+        currentDialect.resetCaches()
     }
 }

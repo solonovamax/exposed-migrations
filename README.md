@@ -19,7 +19,7 @@ supported.
 
 ## Including
 
-You can include SLF4K in your project by adding the following:
+You can include Exposed Migrations in your project by adding the following:
 
 ### Maven
 
@@ -87,7 +87,7 @@ runMigrations(listOf(M0001()))
 ```
 
 The line above will find all classes named according to the
-regex `^M(\\d+)(.*)$` and apply them in order of the number after `M`.
+regex `^M(\\d+)_(.*)$` and apply them in order of the number after `M`.
 
 ## Implementation details
 
@@ -110,7 +110,7 @@ This software is licensed under `MIT`.
 ```text
 MIT License
 
-Copyright (c) 2020 Andreas Mausch
+Copyright (c) 2021 solonovamax
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

@@ -43,15 +43,18 @@ import org.slf4j.kotlin.info
 
 private val logger by getLogger()
 
-internal lateinit var migrationsDatabase: Database
-
+/**
+ * Performs the migrations on the provided list of migrations
+ *
+ * @param migrations
+ * @param database
+ * @param clock
+ */
 fun runMigrations(
     migrations: List<Migration>,
     database: Database = TransactionManager.defaultDatabase!!,
     clock: Clock = Clock.systemUTC()
                  ) {
-    migrationsDatabase = database
-    
     checkVersions(migrations)
     
     logger.info { "Running migrations on database ${database.url}" }
@@ -69,7 +72,7 @@ fun runMigrations(
         
         logger.info { "Running migration version ${migration.version}: ${migration.name}" }
         transaction(database) {
-            migration.run()
+            migration(this)
             
             MigrationEntity.new {
                 version = EntityID(migration.version, MigrationsTable)
@@ -82,8 +85,20 @@ fun runMigrations(
     logger.info { "Migrations finished successfully" }
 }
 
-@Suppress("NOTHING_TO_INLINE") // We want to inline the org.reflections call as to make sure it's called from the right place
-private inline fun getTopLevelClasses(packageName: String): Set<Class<*>> {
+fun loadMigrationsFrom(packageName: String): List<Migration> {
+    return getTopLevelClasses(packageName).map {
+        logger.debug("Instantiating migration class ${it.name}")
+        
+        val instance = it.getDeclaredConstructor().newInstance()
+        
+        if (instance is Migration)
+            instance
+        else
+            throw IllegalArgumentException("There should only be Migrations in this list")
+    }.sortedBy { it.version }
+}
+
+private fun getTopLevelClasses(packageName: String): Set<Class<*>> {
     val reflections = Reflections(packageName)
     
     return reflections.getSubTypesOf(Migration::class.java)
