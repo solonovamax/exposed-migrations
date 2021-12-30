@@ -28,8 +28,6 @@
 
 package gay.solonovamax.exposed.migrations
 
-import java.time.Clock
-import java.time.Instant.now
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
@@ -37,9 +35,10 @@ import org.jetbrains.exposed.sql.exists
 import org.jetbrains.exposed.sql.transactions.TransactionManager
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.reflections.Reflections
-import org.slf4j.kotlin.debug
-import org.slf4j.kotlin.getLogger
-import org.slf4j.kotlin.info
+import org.slf4j.kotlin.*
+import org.slf4j.kotlin.toplevel.*
+import java.time.Clock
+import java.time.Instant.now
 
 private val logger by getLogger()
 
@@ -106,7 +105,7 @@ private fun getTopLevelClasses(packageName: String): Set<Class<*>> {
 
 private fun checkVersions(migrations: List<Migration>) {
     val sorted = migrations.map { it.version }.sorted()
-    if ((1 .. migrations.size).toList() != sorted) {
+    if ((1..migrations.size).toList() != sorted) {
         throw IllegalStateException("List of migrations version is not consecutive: $sorted")
     }
 }
@@ -124,7 +123,8 @@ private fun createTableIfNotExists(database: Database) {
             SchemaUtils.create(MigrationsTable)
         }
         
-        false -> throw IllegalStateException("Tried to run migrations against a non-empty database without a Migrations table. This is not supported.")
+        false -> throw IllegalStateException(
+                "Tried to run migrations against a non-empty database without a Migrations table. This is not supported.")
     }
 }
 

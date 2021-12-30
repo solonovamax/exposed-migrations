@@ -5,12 +5,12 @@ plugins {
     signing
     `java-library`
     `maven-publish`
-    id("org.jetbrains.kotlin.jvm") version "1.5.21"
+    kotlin("jvm") version "1.6.10"
     id("org.jetbrains.dokka") version "1.5.0"
 }
 
 group = "gay.solonovamax"
-version = "4.0.0"
+version = "4.0.1"
 
 repositories {
     mavenCentral()
@@ -18,12 +18,12 @@ repositories {
 
 dependencies {
     // Align versions of all Kotlin components
-    compileOnly(platform("org.jetbrains.kotlin:kotlin-bom"))
+    compileOnly(platform(kotlin("bom")))
     
     // Logging
-    api("ca.solo-studios:slf4k:0.3.1")
+    api("ca.solo-studios:slf4k:0.4.6")
     
-    api("org.reflections:reflections:0.9.12")
+    api("org.reflections:reflections:0.10.2")
     
     // Exposed ORM
     val exposedVersion = "0.36.1"
