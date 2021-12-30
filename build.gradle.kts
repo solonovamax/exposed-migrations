@@ -26,7 +26,7 @@ dependencies {
     api("org.reflections:reflections:0.9.12")
     
     // Exposed ORM
-    val exposedVersion = "0.33.1"
+    val exposedVersion = "0.36.1"
     api("org.jetbrains.exposed:exposed-core:$exposedVersion")
     api("org.jetbrains.exposed:exposed-dao:$exposedVersion")
     api("org.jetbrains.exposed:exposed-jdbc:$exposedVersion")
